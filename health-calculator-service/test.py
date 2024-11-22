@@ -17,20 +17,22 @@ class TestHealthUtils(unittest.TestCase):
             calculate_bmi(0, 70)  # Zero height should raise an error
     
     def test_calculate_bmr_male(self):
-        # Test for male BMR calculation
-        self.assertAlmostEqual(calculate_bmr(175, 70, 25, 'male'), 1706.69, places=2)
+        # Male, 175 cm, 70 kg, 25 years
+        self.assertAlmostEqual(calculate_bmr(175, 70, 25, 'male'), 1724.05, places=2)
 
     def test_calculate_bmr_female(self):
-        # Test for female BMR calculation
-        self.assertAlmostEqual(calculate_bmr(160, 60, 30, 'female'), 1384.14, places=2)
+        # Female, 160 cm, 60 kg, 30 years
+        self.assertAlmostEqual(calculate_bmr(160, 60, 30, 'female'), 1368.19, places=2)
 
     def test_calculate_bmr_edge_case(self):
-        # Test for an edge case for an older age
-        self.assertAlmostEqual(calculate_bmr(175, 70, 60, 'male'), 1510.44, places=2)
-        
+        # Male, 175 cm, 70 kg, 60 years
+        self.assertAlmostEqual(calculate_bmr(175, 70, 60, 'male'), 1525.36, places=2)
+
     def test_calculate_bmr_invalid(self):
-        # Test for invalid age input
+        # Invalid age
         self.assertEqual(calculate_bmr(175, 70, -5, 'male'), "Invalid age")
+        # Invalid gender
+        self.assertEqual(calculate_bmr(175, 70, 25, 'other'), "Invalid gender")
 
 if __name__ == '__main__':
     unittest.main()

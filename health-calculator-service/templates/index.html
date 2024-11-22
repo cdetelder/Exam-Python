@@ -4,13 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Health Calculator</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Welcome to Health Calculator</h1>
-    <nav>
-        <a href="/bmi-page">Calculate BMI</a>
-        <a href="/bmr-page">Calculate BMR</a>
-    </nav>
+
+    <div class="container">
+        <h1>Health Calculator</h1>
+
+        <!-- BMI Calculation Form -->
+        <div class="form-container">
+            <h2>BMI Calculator</h2>
+            <form id="bmi-form">
+                <label for="height">Height (m):</label>
+                <input type="number" id="height" step="0.01" required>
+
+                <label for="weight">Weight (kg):</label>
+                <input type="number" id="weight" step="0.1" required>
+
+                <button type="submit">Calculate BMI</button>
+            </form>
+            <p id="bmi-result"></p>
+        </div>
+
+        <!-- BMR Calculation Form -->
+        <div class="form-container">
+            <h2>BMR Calculator</h2>
+            <form id="bmr-form">
+                <label for="height-bmr">Height (cm):</label>
+                <input type="number" id="height-bmr" required>
+
+                <label for="weight-bmr">Weight (kg):</label>
+                <input type="number" id="weight-bmr" required>
+
+                <label for="age">Age (years):</label>
+                <input type="number" id="age" required>
+
+                <label for="gender">Gender:</label>
+                <select id="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+
+                <button type="submit">Calculate BMR</button>
+            </form>
+            <p id="bmr-result"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

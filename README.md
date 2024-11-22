@@ -1,3 +1,6 @@
-Examen Python - Camille DETELDER
+# Examen Python - Camille DETELDER
 
-xécute les tests dans un container Docker. Cela peut garantir que les tests se dérouleront dans un environnement isolé similaire à la production.
+### Fonctionnalités ajoutées : 
+- Ajout d'une interface web basée sur HTML et CSS
+- Ajout du flag "--no-cache-dir" dans le Dockerfile pour réduire l'image Docker
+- Exécution les tests dans un container Docker

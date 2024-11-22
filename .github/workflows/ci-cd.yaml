@@ -1,33 +1,47 @@
-# name: CI/CD Pipeline
-# on:
-# push:
-# branches:
-# - main
-# jobs:
-# build-test-deploy:
-# runs-on: ubuntu-latest
-# steps:
-# - name: Checkout code
-# uses: actions/checkout@v2
-# - name: Set up Python
-# uses: actions/setup-python@v2
-# with:
-# python-version: '3.x'
-# - name: Install dependencies
-# run: |
-# cd health-calculator-service
-# make init
-# - name: Run tests
-# run: |
-# cd health-calculator-service
-# make test
-# - name: Build Docker image
-# run: |
-# cd health-calculator-service
-# make build
-# - name: Deploy to Azure Web App
-# uses: azure/webapps-deploy@v2
-# with:
-# app-name: 'health-calculator-app' # Replace with your Azure app name
-# publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-# package: ./health-calculator-service
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # The pipeline will be triggered when a commit is pushed to the 'main' branch
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest  # Using an Ubuntu virtual machine for the job execution
+
+    steps:
+      # 1. Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v2  
+
+      # 2. Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v2 
+        with:
+          python-version: '3.12'  
+
+      # 3. Install dependencies using the Makefile
+      - name: Install dependencies
+        run: |
+          cd health-calculator-service  # Navigate to the folder where the Makefile is located
+          make init  # Install dependencies via pip
+
+      # 4. Run unit tests
+      - name: Run tests
+        run: |
+          cd health-calculator-service  # Navigate to the project folder
+          make test  # Execute the unit tests
+
+      # 5. Build the Docker image
+      - name: Build Docker image
+        run: |
+          cd health-calculator-service  # Navigate to the project folder
+          make build  # Runs 'make build' to build the Docker image
+
+      # 6. Deploy to Azure Web App
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2 
+        with:
+          app-name: 'health-calculator'  
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Secret containing the publish profile, set in GitHub Secrets
+          package: ./health-calculator-service  # Path to the package to deploy

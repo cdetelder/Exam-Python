@@ -3,13 +3,13 @@ def calculate_bmi(height, weight):
     return weight / (height ** 2)
 
 def calculate_bmr(height, weight, age, gender):
-    # Calculate Basal Metabolic Rate (BMR) using the Harris-Benedict equation.
+    if age < 0:
+        return "Invalid age"
+    
     if gender.lower() == 'male':
-        bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
+        return round(88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age), 2)
     elif gender.lower() == 'female':
-        bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)
+        return round(447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age), 2)
     else:
         return "Invalid gender"
-    
-    # Round the result to 2 decimal places
-    return round(bmr, 2)
+

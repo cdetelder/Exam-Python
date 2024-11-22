@@ -7,18 +7,18 @@ init:
 	@echo "Installing dependencies..."
 	pip install -r requirements.txt
 
+build:
+	@echo "Building the Docker image..."
+	docker build -t $(IMAGE_NAME) .
+
 run:
-	@echo "Running the Flask app in Docker..."
+	@echo "Running the Flask app..."
 	docker run -p $(PORT):5000 $(IMAGE_NAME)
 
 test:
 	@echo "Running tests inside Docker..."
 	docker run --rm $(IMAGE_NAME) python -m unittest discover
 
-build:
-	@echo "Building the Docker image..."
-	docker build --no-cache -t $(IMAGE_NAME) .
-
 clean:
-	@echo "Cleaning up Docker containers and images..."
+	@echo "Cleaning up..."
 	docker system prune -f

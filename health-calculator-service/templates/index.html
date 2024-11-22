@@ -4,53 +4,213 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Health Calculator</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* CSS Styles */
+
+        /* General page styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+    </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Health Calculator</h1>
 
-        <!-- BMI Calculation Form -->
-        <div class="form-container">
-            <h2>BMI Calculator</h2>
-            <form id="bmi-form">
-                <label for="height">Height (m):</label>
-                <input type="number" id="height" step="0.01" required>
+        <!-- BMI Form -->
+        <form id="bmi-form">
+            <label for="height">Height (m):</label>
+            <input type="number" id="height" step="0.01" required>
 
-                <label for="weight">Weight (kg):</label>
-                <input type="number" id="weight" step="0.1" required>
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" step="0.1" required>
 
-                <button type="submit">Calculate BMI</button>
-            </form>
-            <p id="bmi-result"></p>
-        </div>
+            <button type="submit">Calculate BMI</button>
+        </form>
 
-        <!-- BMR Calculation Form -->
-        <div class="form-container">
-            <h2>BMR Calculator</h2>
-            <form id="bmr-form">
-                <label for="height-bmr">Height (cm):</label>
-                <input type="number" id="height-bmr" required>
+        <div class="result" id="bmi-result"></div>
 
-                <label for="weight-bmr">Weight (kg):</label>
-                <input type="number" id="weight-bmr" required>
+        <!-- BMR Form -->
+        <form id="bmr-form">
+            <label for="height-bmr">Height (cm):</label>
+            <input type="number" id="height-bmr" step="0.1" required>
 
-                <label for="age">Age (years):</label>
-                <input type="number" id="age" required>
+            <label for="weight-bmr">Weight (kg):</label>
+            <input type="number" id="weight-bmr" step="0.1" required>
 
-                <label for="gender">Gender:</label>
-                <select id="gender">
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
+            <label for="age">Age:</label>
+            <input type="number" id="age" required>
 
-                <button type="submit">Calculate BMR</button>
-            </form>
-            <p id="bmr-result"></p>
-        </div>
+            <label for="gender">Gender:</label>
+            <select id="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+
+            <button type="submit">Calculate BMR</button>
+        </form>
+
+        <div class="result" id="bmr-result"></div>
+        <div class="error" id="error-message"></div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- JavaScript (Place the script here or link it externally) -->
+    <script>
+        // Function to calculate BMI when the form is submitted
+        function calculateBMI() {
+            // Get the height and weight values from the input fields
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+
+            // Check if the inputs are valid
+            if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+                alert("Please enter valid height and weight values.");
+                return;
+            }
+
+            // Prepare data to send to the Flask server
+            const data = {
+                height: height,
+                weight: weight
+            };
+
+            // Make a POST request to the Flask API for BMI calculation
+            fetch('http://localhost:5000/bmi', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the BMI result
+                document.getElementById('bmi-result').textContent = `BMI: ${data.bmi}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred while calculating BMI.");
+            });
+        }
+
+        // Function to calculate BMR when the form is submitted
+        function calculateBMR() {
+            // Get the values from the input fields
+            const height = parseFloat(document.getElementById('height-bmr').value);
+            const weight = parseFloat(document.getElementById('weight-bmr').value);
+            const age = parseInt(document.getElementById('age').value);
+            const gender = document.getElementById('gender').value;
+
+            // Check if the inputs are valid
+            if (isNaN(height) || isNaN(weight) || isNaN(age) || height <= 0 || weight <= 0 || age <= 0 || (gender !== 'male' && gender !== 'female')) {
+                alert("Please enter valid height, weight, age, and gender.");
+                return;
+            }
+
+            // Prepare data to send to the Flask server
+            const data = {
+                height: height,
+                weight: weight,
+                age: age,
+                gender: gender
+            };
+
+            // Make a POST request to the Flask API for BMR calculation
+            fetch('http://localhost:5000/bmr', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the BMR result
+                document.getElementById('bmr-result').textContent = `BMR: ${data.bmr}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred while calculating BMR.");
+            });
+        }
+
+        // Add event listeners to the forms
+        document.getElementById('bmi-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            calculateBMI();
+        });
+
+        document.getElementById('bmr-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            calculateBMR();
+        });
+    </script>
 </body>
 </html>

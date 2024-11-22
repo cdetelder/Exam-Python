@@ -7,5 +7,5 @@
 
 
 ### Résultat :
-![alt text](job_success.png)
-![alt text](website.png)
+![alt text](website_front.png)
+![alt text](github_actions_job_success.png)

@@ -3,36 +3,31 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # The pipeline will be triggered when a commit is pushed to the 'main' branch
+      - main  
 
 jobs:
   build-test-deploy:
-    runs-on: ubuntu-latest  # Using an Ubuntu virtual machine for the job execution
+    runs-on: ubuntu-latest  
 
     steps:
-      # Checkout the code from the repository
       - name: Checkout code
         uses: actions/checkout@v2  
 
-      # Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v2 
         with:
           python-version: '3.12'  
 
-      # Install dependencies using the Makefile
       - name: Install dependencies
         run: |
           cd health-calculator-service  # Navigate to the folder where the Makefile is located
           make init  # Install dependencies via pip
 
-      # Build the Docker image
       - name: Build Docker image
         run: |
           cd health-calculator-service  # Navigate to the project folder
           make build  # Runs 'make build' to build the Docker image
 
-      # Run unit tests
       - name: Run tests
         run: |
           cd health-calculator-service  # Navigate to the project folder
@@ -42,5 +37,5 @@ jobs:
         uses: azure/webapps-deploy@v2 
         with:
           app-name: 'health-calculator'  
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Secret containing the publish profile, set in GitHub Secrets
-          package: ./health-calculator-service  # Path to the package to deploy
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  
+          package: ./health-calculator-service  
